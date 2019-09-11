@@ -25,13 +25,13 @@ void swap(byte *src,byte *to){
     *src^=*to;
 }
 
-void deck_init(struct deck *deck){
-    memset(deck,0x0,sizeof(struct deck));
+void deck_init(Deck *deck){
+    deck=(Deck*)malloc(sizeof(Deck)+sizeof(byte)*CARD_TYPE_COUNT);
     memcpy(deck->cards,CARDS,sizeof(CARDS));
     deck->len=CARD_TYPE_COUNT;
 }
 
-void deck_log(const struct deck *deck){
+void deck_log(const Deck *deck){
     printf("(%d)[",deck_len(deck));
     for(int i=0;i<deck->len;++i){
         printf("%d ",deck->cards[i]);
@@ -39,7 +39,7 @@ void deck_log(const struct deck *deck){
     printf("]\n");
 }
 
-int deck_len(const struct deck *deck){
+int deck_len(const Deck *deck){
     int count=0;
     for(int i=0;i<CARD_TYPE_COUNT;++i){
         count+=deck->cards[i]&0x0F;
@@ -47,17 +47,17 @@ int deck_len(const struct deck *deck){
     return count;
 }
 
-int deck_get_card(struct deck *deck,byte *card,FILTER filter){
+int deck_get_card(Deck *deck,byte *card,FILTER filter){
     int ok=0;
     return ok;
 }
 
-int deck_get_supply(struct deck *deck,byte *arr,FILTER filter){
+int deck_get_supply(Deck *deck,byte *arr,FILTER filter){
     int ok=0;
     return ok; 
 }
 
-int deck_get_single(struct deck *deck,byte *arr,FILTER filter){
+int deck_get_single(Deck *deck,byte *arr,FILTER filter){
     int ok=0;
     if(deck->len>=1){
         
@@ -65,22 +65,22 @@ int deck_get_single(struct deck *deck,byte *arr,FILTER filter){
     return ok;
 }
 
-int deck_get_pair(struct deck *deck,byte *arr,FILTER filter){
+int deck_get_pair(Deck *deck,byte *arr,FILTER filter){
     int ok=0;
     return ok;
 }
 
-int deck_get_three(struct deck *deck,byte *arr,FILTER filter){
+int deck_get_three(Deck *deck,byte *arr,FILTER filter){
     int ok=0;
     return ok;
 }
 
-int deck_get_bomb(struct deck *deck,byte *arr,FILTER filter){
+int deck_get_bomb(Deck *deck,byte *arr,FILTER filter){
     int ok=0;
     return ok;
 }
 
-int deck_get_rocket(struct deck *deck,byte *arr,FILTER filter){
+int deck_get_rocket(Deck *deck,byte *arr,FILTER filter){
     int ok=0;
     return ok;
 }

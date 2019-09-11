@@ -5,19 +5,20 @@
 #define CARD_TYPE_COUNT 16
 extern const byte CARDS[];
 
-struct deck{
-    byte cards[CARD_TYPE_COUNT];
+typedef struct{
     int len;
-};
-typedef byte* (*FILTER)(const struct deck*);
-void deck_init(struct deck *deck);
-void deck_log(const struct deck *deck);
-int deck_len(const struct deck *deck);
-int deck_get_supply(struct deck *deck,byte *arr,FILTER filter);
-int deck_get_single(struct deck *deck,byte *arr,FILTER filter);
-int deck_get_pair(struct deck *deck,byte *arr,FILTER filter);
-int deck_get_three(struct deck *deck,byte *arr,FILTER filter);
-int deck_get_bomb(struct deck *deck,byte *arr,FILTER filter);
-int deck_get_rocket(struct deck *deck,byte *arr,FILTER filter);
-int deck_get_card(struct deck *deck,byte *card,FILTER filter);
+    byte cards[]
+}Deck;
+
+typedef byte* (*FILTER)(const Deck*);
+void deck_init(Deck *deck);
+void deck_log(const Deck *deck);
+int deck_len(const Deck *deck);
+int deck_get_supply(Deck *deck,byte *arr,FILTER filter);
+int deck_get_single(Deck *deck,byte *arr,FILTER filter);
+int deck_get_pair(Deck *deck,byte *arr,FILTER filter);
+int deck_get_three(Deck *deck,byte *arr,FILTER filter);
+int deck_get_bomb(Deck *deck,byte *arr,FILTER filter);
+int deck_get_rocket(Deck *deck,byte *arr,FILTER filter);
+int deck_get_card(Deck *deck,byte *card,FILTER filter);
 #endif

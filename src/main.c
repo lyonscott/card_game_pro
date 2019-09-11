@@ -2,7 +2,7 @@
 #include "deck.h"
 
 int main(int argc,char **argv){
-  struct deck deck;
+  Deck deck;
   deck_init(&deck);
   deck_log(&deck);
   byte single[1];
