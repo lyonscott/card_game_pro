@@ -3,6 +3,20 @@
 typedef struct buff Buff;
 typedef struct buff_ptr BuffPtr;
 
+struct buff_ptr{
+	int len;
+	int _max;
+	byte *arr[];
+};
+
+BuffPtr* buff_ptr_create(const Buff *buf){
+    BuffPtr *ptr=(BuffPtr*)malloc(sizeof(BuffPtr)+sizeof(byte*)*buf->len);
+    if(ptr==NULL)return NULL;
+    ptr->len=0;
+    ptr->_max=buf->len;
+    return ptr;
+}
+
 //0xN0: card value
 //0x0N: card count
 const byte CARDS[CARDS_VAL_COUNT]={
@@ -19,18 +33,9 @@ Buff* buff_create(int len){
 }
 void buff_log(Buff *buf){
     printf("(%d)[",buf->len);
-    for(int i=0;i<buf->len;++i){
+    for(int i=0;i<buf->len;++i)
         printf("%02X ",buf->arr[i]);
-    }
     printf("]\n");
-}
-
-BuffPtr* buff_ptr_create(const Buff *buf){
-    BuffPtr *ptr=(BuffPtr*)malloc(sizeof(BuffPtr)+sizeof(byte*)*buf->len);
-    if(ptr==NULL)return NULL;
-    ptr->len=0;
-    ptr->_max=buf->len;
-    return ptr;
 }
 
 Buff* deck_create(){
@@ -81,7 +86,7 @@ move_to(BuffPtr *src,Buff *to,int idx,int count){
 }
 
 static inline Buff*
-get_card(Buff *in,int count,FILTER filter){
+get_same_by_count(Buff *in,int count,FILTER filter){
     Buff *out=buff_create(count);
     while(out!=NULL){
         out->len=0;
@@ -94,41 +99,6 @@ get_card(Buff *in,int count,FILTER filter){
     return out;
 }
 
-int deck_get_supply(Buff *deck,byte *arr,FILTER filter){
-    int stat=deck_len(deck)>=3;
-    if(stat==DECK_STAT_OK){
-
-    }
-    return stat;
-}
-
-Buff* deck_get_card(int type,Buff *in,FILTER filter){
-    Buff *out=NULL;
-    switch(type){
-        case CARD_TYPE_SINGLE:
-            out=deck_get_single(in,filter);
-        break;
-        case CARD_TYPE_PAIR:
-            out=deck_get_pair(in,filter);
-        break;
-        case CARD_TYPE_THREE:
-            out=deck_get_three(in,filter);
-        break;
-        case CARD_TYPE_BOMB:
-            out=deck_get_bomb(in,filter);
-        break;
-        case CARD_TYPE_ROCKET:
-            out=deck_get_rocket(in,filter);
-        break;
-    }
-    return out;
-}
-
-Buff* deck_get_single(Buff *in,FILTER filter){return get_card(in,1,filter);}
-Buff* deck_get_pair(Buff *in,FILTER filter){return get_card(in,2,filter);}
-Buff* deck_get_three(Buff *in,FILTER filter){return get_card(in,3,filter);}
-Buff* deck_get_bomb(Buff *in,FILTER filter){return get_card(in,4,filter);}
-Buff* deck_get_rocket(Buff *in,FILTER filter){
-    Buff *out=buff_create(0);
-    return out;
+Buff* deck_get_card(Buff *in,int num,FILTER filter){
+    return get_same_by_count(in,num,filter);
 }
