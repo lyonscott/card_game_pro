@@ -17,6 +17,15 @@ BuffPtr* buff_ptr_create(const Buff *buf){
     return ptr;
 }
 
+//random
+static unsigned long _deck_hold_seed=1;
+void deck_srand(unsigned int num){_deck_hold_seed=num;}
+static inline unsigned int _rand(){
+    _deck_hold_seed=((_deck_hold_seed*214013+2531011)>>16)&0x7FFF;
+    return (unsigned int)_deck_hold_seed;
+}
+static inline int _rrand(int len){return _rand()%len;}
+
 //0xN0: card value
 //0x0N: card count
 const byte CARDS[CARDS_VAL_COUNT]={
@@ -25,7 +34,6 @@ const byte CARDS[CARDS_VAL_COUNT]={
 
 static inline int value_of(const byte num){return num&0xF0;}
 static inline int count_of(const byte num){return num&0x0F;}
-static inline int rrand(int len){return rand()%len;}
 static inline void swap(byte *src,byte *to){if(*src==*to)return;*src^=*to;*to^=*src;*src^=*to;}
 
 Buff* buff_create(int len){
@@ -92,7 +100,7 @@ get_same_by_count(Buff *in,int count,FILTER filter){
         out->len=0;
         BuffPtr *bp=collect_by_count(in,count);
         if(bp==NULL)break;
-        int idx=rrand(bp->len);
+        int idx=_rrand(bp->len);
         move_to(bp,out,idx,count);
         break;
     }

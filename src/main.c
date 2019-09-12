@@ -3,6 +3,7 @@
 
 int test_same_card(int num){
 	struct buff *deck=deck_create();
+	deck_srand(time(NULL));
 	if(deck==NULL){
 		printf("deck create failed!\n");
 		return 0;
