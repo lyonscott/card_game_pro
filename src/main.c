@@ -13,9 +13,9 @@ int test_same_card(int num){
 		struct buff *buf=deck_get_card(deck,num,NULL);
 		printf("deck: %d card: ",deck_len(deck));
 		buff_log(buf);
-		free(buf);
+		buff_delete(buf);
 	}
-	free(deck);
+	buff_delete(deck);
 	return 1;
 }
 

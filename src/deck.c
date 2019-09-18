@@ -16,6 +16,10 @@ BuffPtr* buff_ptr_create(const Buff *buf){
     ptr->_max=buf->len;
     return ptr;
 }
+void buff_ptr_delete(BuffPtr *ptr){
+    free(ptr);
+    ptr=NULL;
+}
 
 //random
 static unsigned long _deck_hold_seed=1;
@@ -38,6 +42,10 @@ static inline void swap(byte *src,byte *to){if(*src==*to)return;*src^=*to;*to^=*
 
 Buff* buff_create(int len){
     return (Buff*)malloc(sizeof(Buff)+sizeof(byte)*len);
+}
+void buff_delete(Buff *buf){
+    free(buf);
+    buf=NULL;
 }
 void buff_log(Buff *buf){
     printf("(%d)[",buf->len);
@@ -102,6 +110,7 @@ get_same_by_count(Buff *in,int count,FILTER filter){
         if(bp==NULL)break;
         int idx=_rrand(bp->len);
         move_to(bp,out,idx,count);
+        buff_ptr_delete(bp);
         break;
     }
     return out;

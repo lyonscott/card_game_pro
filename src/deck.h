@@ -10,9 +10,10 @@ struct buff{
 	byte arr[];
 };
 struct buff* buff_create(int len);
+void buff_delete(struct buff *buf);
 void buff_log(struct buff *buf);
 
-typedef byte* (*FILTER)(const struct buff*);
+typedef byte* (*FILTER)(const struct buff *buf);
 struct buff* deck_create();
 void deck_srand(unsigned int seed);
 void deck_log(const struct buff *deck);
