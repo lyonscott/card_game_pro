@@ -5,13 +5,7 @@
 #define CARDS_VAL_COUNT	15
 extern const byte CARDS[];
 
-struct buff{
-	int len;
-	byte arr[];
-};
-struct buff* buff_create(int len);
-void buff_delete(struct buff *buf);
-void buff_log(struct buff *buf);
+;
 
 typedef struct buff* (*FILTER)(const struct buff *buf);
 struct buff* deck_create();

@@ -6,7 +6,11 @@ CXXFLAGS+=-Wall -Wformat
 INC+= -I./src
 
 MAIN_SRC+= ./src/main.c \
-./src/deck.c
+./src/base.c \
+./src/deck.c \
+./src/pdfl.c \
+./src/re.c \
+./src/cstring.c
 MAIN_OBJS= $(MAIN_SRC:.c=.o)
 
 $(EXE): $(MAIN_OBJS)

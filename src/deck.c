@@ -3,24 +3,6 @@
 typedef struct buff Buff;
 typedef struct buff_ptr BuffPtr;
 
-struct buff_ptr{
-	int len;
-	int _max;
-	byte *arr[];
-};
-
-BuffPtr* buff_ptr_create(const Buff *buf){
-    BuffPtr *ptr=(BuffPtr*)malloc(sizeof(BuffPtr)+sizeof(byte*)*buf->len);
-    if(ptr==NULL)return NULL;
-    ptr->len=0;
-    ptr->_max=buf->len;
-    return ptr;
-}
-void buff_ptr_delete(BuffPtr *ptr){
-    free(ptr);
-    ptr=NULL;
-}
-
 //random
 static unsigned long _deck_hold_seed=1;
 void deck_srand(unsigned int num){_deck_hold_seed=num;}
@@ -39,20 +21,6 @@ const byte CARDS[CARDS_VAL_COUNT]={
 static inline int value_of(const byte num){return num&0xF0;}
 static inline int count_of(const byte num){return num&0x0F;}
 static inline void swap(byte *src,byte *to){if(*src==*to)return;*src^=*to;*to^=*src;*src^=*to;}
-
-Buff* buff_create(int len){
-    return (Buff*)malloc(sizeof(Buff)+sizeof(byte)*len);
-}
-void buff_delete(Buff *buf){
-    free(buf);
-    buf=NULL;
-}
-void buff_log(Buff *buf){
-    printf("(%d)[",buf->len);
-    for(int i=0;i<buf->len;++i)
-        printf("%02X ",buf->arr[i]);
-    printf("]\n");
-}
 
 Buff* deck_create(){
     Buff *deck=buff_create(CARDS_VAL_COUNT);
