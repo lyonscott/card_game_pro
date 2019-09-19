@@ -14,7 +14,12 @@ list::={HEXDIG}
 range::=HEXDIG':'HEXDIG
 
 [eg]
-+b2[ABCD]t2[4:9]p1[12,6:A](b,t)c2[AF](p) #using
+#using
++b2[ABCD] 
+ t2[4:9]
+ p1[12,6:A](b,t)
+ c2[AF](p)
+
 -b2[ABCD]t2[4:9]p1[12]c2[AF] #unusing
 */
 enum PDFL_TYPES{
@@ -67,15 +72,24 @@ enum PDFL_CARDS{
     PDFL_CARD_M=1<<15,
 };
 
+#define PDFL_OK 1
+#define PDFL_TYPE 100
+#define PDFL_DIGIT 101
+#define PDFL_HEXDIG 102
+#define PDFL_RANGE 103
+#define PDFL_LIST 104
+#define PDFL_LIMIT 105
+#define PDFL_EXPAND 106
+
 struct filter{
     int type_code;
     int count;
-    byte limit;
-    byte expand;
+    u8 limit;
+    u8 expand;
 };
 struct filter* filter_create();
-void filter_add_limit(struct filter *filter,byte mark);
-void filter_add_expand(struct filter *filter,byte mark);
+void filter_add_limit(struct filter *filter,u8 mark);
+void filter_add_expand(struct filter *filter,u8 mark);
 void pdfl_parser(const char *str,int len);
 
 #endif

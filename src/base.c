@@ -1,31 +1,31 @@
 #include "base.h"
 
-typedef struct buff_ptr BuffPtr;
+typedef struct buffer_ptr bufferPtr;
 
-struct buff* 
-buff_create(int len){
-    return (struct buff*)malloc(sizeof(struct buff)+sizeof(byte)*len);
+struct buffer* 
+buffer_create(int len){
+    return (struct buffer*)malloc(sizeof(struct buffer)+sizeof(u8)*len);
 }
-void buff_delete(struct buff *buf){
+void buffer_delete(struct buffer *buf){
     free(buf);
     buf=NULL;
 }
-void buff_log(struct buff *buf){
+void buffer_log(struct buffer *buf){
     printf("(%d)[",buf->len);
     for(int i=0;i<buf->len;++i)
         printf("%02X ",buf->arr[i]);
     printf("]\n");
 }
 
-struct buff_ptr* 
-buff_ptr_create(const struct buff *buf){
-    BuffPtr *ptr=(BuffPtr*)malloc(sizeof(BuffPtr)+sizeof(byte*)*buf->len);
+struct buffer_ptr* 
+buffer_ptr_create(const struct buffer *buf){
+    bufferPtr *ptr=(bufferPtr*)malloc(sizeof(bufferPtr)+sizeof(u8*)*buf->len);
     if(ptr==NULL)return NULL;
     ptr->len=0;
     ptr->_max=buf->len;
     return ptr;
 }
-void buff_ptr_delete(struct buff_ptr *ptr){
+void buffer_ptr_delete(struct buffer_ptr *ptr){
     free(ptr);
     ptr=NULL;
 }

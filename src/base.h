@@ -8,23 +8,25 @@
 #include <string.h>
 
 #define ARRAY_SIZE(arr) (sizeof(arr)/sizeof(arr[0]))
-#define byte unsigned char
+typedef unsigned char u8;
 
-struct buff{
+struct buffer{
 	int len;
-	byte arr[];
+	u8 arr[];
 };
-struct buff* buff_create(int len);
-void buff_delete(struct buff *buf);
-void buff_log(struct buff *buf);
 
-struct buff_ptr{
+struct buffer *buffer_create(int len);
+void buffer_delete(struct buffer *buf);
+void buffer_log(struct buffer *buf);
+
+struct buffer_ptr{
 	int len;
 	int _max;
-	byte *arr[];
+	u8 *arr[];
 };
 
-struct buff_ptr* buff_ptr_create(const struct buff *buf);
-void buff_ptr_delete(struct buff_ptr *ptr);
+struct buffer_ptr* buffer_ptr_create(const struct buffer *buf);
+void buffer_ptr_delete(struct buffer_ptr *ptr);
+
 
 #endif

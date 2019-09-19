@@ -1,28 +1,27 @@
 EXE:=game
+TEST:=ts
 
 CXX= gcc
 
 CXXFLAGS+=-Wall -Wformat
 INC+= -I./src
 
-MAIN_SRC+= ./src/main.c \
-./src/base.c \
-./src/deck.c \
-./src/pdfl.c \
-./src/re.c \
-./src/cstring.c
-MAIN_OBJS= $(MAIN_SRC:.c=.o)
+MAIN_SRC+= ./src/main.c ./src/base.c ./src/deck.c ./src/pdfl.c
 
-$(EXE): $(MAIN_OBJS)
+
+
+TEST_SRC+= ./test/test.c
+TEST_OBJS= $(TEST_SRC:.c=.o)
+
+$(EXE): $(foreach v, $(MAIN_SRC),$(v))
 	$(CXX) $(CXXFLAGS) $(INC) -o $@ $^
 
-$(TEST): $(TEST_OBJS)
+$(TEST): $(foreach v, $(TEST_SRC),$(v))
 	$(CXX) $(CXXFLAGS) $(INC) -o $@ $^
 
-all: $(EXE) $(TEST)
+all: $(EXE)
+
+ts: $(TEST)
 
 clean:
-	@rm -f $(EXE) $(MAIN_OBJS) $(TEST_OBJS)
-
-%.o: %.c
-	$(CXX) $(CXXFLAGS) $(INC) -c -o $@ $^
+	@rm -f $(EXE) $(TEST)
