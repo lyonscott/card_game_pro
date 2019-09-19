@@ -6,7 +6,7 @@
 abbr(name)=>hex
 
 [syntax]
-chunk='#'{VCHAR}|('+'|'-'){body}
+chunk::='#'{VCHAR}|('+'|'-'){body}
 body::=<types><DIGIT>[limit][expand]
 expand::='('types {','types}')'
 types::=s|p|t|tc|tp|s|sp|st|stc|stp|b|r|q
