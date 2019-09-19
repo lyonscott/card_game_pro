@@ -6,16 +6,17 @@
 abbr(name)=>hex
 
 [syntax]
-chunk=<mark>{<types><num>[<limit>]}
-mark::='+'|'-'|'#'
+chunk='#'{VCHAR}|('+'|'-'){body}
+body::=<types><DIGIT>[limit][expand]
+expand::='('types {','types}')'
 types::=s|p|t|tc|tp|s|sp|st|stc|stp|b|r|q
-num::= DIGIT
-limit::='['<range>{','range}']'
-range::=HEXDIG|{HEXDIG}|HEXDIG':'HEXDIGIT
+limit::='['list {','(list|range)}']'
+list::={HEXDIG}
+range::=HEXDIG':'HEXDIG
 
 [eg]
-+b2[ABCD]t2[4:9]p1[12,6:A]c2[EF] #using
--b2[ABCD]t2[4:9]p1[12]c2[EF] #unusing
++b2[ABCD]t2[4:9]p1[12,6:A](b,t)c2[AF](p) #using
+-b2[ABCD]t2[4:9]p1[12]c2[AF] #unusing
 */
 #define PDFL_TYPE_CODE_C 0x630000 //Single card
 #define PDFL_TYPE_CODE_P 0x700000 //Pair
