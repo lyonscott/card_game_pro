@@ -10,7 +10,7 @@ chunk::='#'{VCHAR}|('+'|'-'){body}
 body::=<types><DIGIT>[limit][expand]
 expand::='('types {','types}')'
 types::=s|p|t|tc|tp|s|sp|st|stc|stp|b|r|q
-limit::='['list {','(list|range)}']'
+limit::='['(list|range) {','(list|range)}']'
 list::={HEXDIG}
 range::=HEXDIG':'HEXDIG
 
