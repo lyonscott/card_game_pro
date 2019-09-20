@@ -82,18 +82,41 @@ void parse_chunk(const char *str,int start,int end){
 
 }
 //TODO parser_fsm
-enum{
-    MARK_USING,
-    MARK_UNUSING,
-    MARK_NOTE,
-    MARK_END_LINE,
-    MARK_TYPE,
-    MARK_NUMBER,
-    MARK_START_LIMIT,
-    MARK_END_LIMIT,
-    MARK_START_EXPAND,
-    MARK_END_EXPAND,
+enum token{
+    TOKEN_BUFF=0,
+    TOKEN_NEFF=1,
+    TOKEN_NOTE=2,
+    TOKEN_TYPE=3,
+    TOKEN_DIGIT=4,
+    TOKEN_HEXDIG=5,
+    TOKEN_LIMIT=6,
+    TOKEN_EXPAND=7,
 };
+typedef enum token TOKEN;
+
+struct lexer{
+    TOKEN token;
+    const char *s_ptr;
+};
+typedef struct lexer LEXER;
+
+#define CH_BUFF(ch) (ch==0x2B)
+#define CH_NEFF(ch) (ch==0x2D)
+#define CH_NOTE(ch) (ch==0x23)
+#define CH_DIGIT(ch) (ch>=0x30&&ch<=0x39)
+#define CH_HEXDIG(ch) (CH_DIGIT(ch)||(ch>=0x41&&ch<=0x46))
+#define CH_LIMIT(ch) (ch==0x5B)
+#define CH_EXPAND(ch) (ch==0x28)
+
+void get_token(char ch){
+    
+}
+
+void parser(const char *str){
+    int len=strlen(str);
+    
+}
+
 void parser_fsm(const char *str,int len){
     int idx=0;
     while(idx<len){

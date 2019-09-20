@@ -4,11 +4,11 @@
 #include "base.h"
 
 /* Poker Draws Form Language(pdfl)
-[syntax]
-chunk::='#'{VCHAR}|('+'|'-'){body}
+chunk::=(<mark>{body})|chunk
+mark::='+'|'-'|'#'
 body::=<types><DIGIT>[limit][expand]
-expand::='('types {','types}')'
 types::=s|p|t|tc|tp|s|sp|st|stc|stp|b|r|q
+expand::='('types {','types}')'
 limit::='['(list|range) {','(list|range)}']'
 list::={HEXDIG}
 range::=HEXDIG':'HEXDIG
@@ -55,19 +55,19 @@ enum PDFL_TYPE_CODES{
 };
 
 enum PDFL_CARDS{
-    PDFL_CARD_A=1<<1,
-    PDFL_CARD_2=1<<2,
-    PDFL_CARD_3=1<<3,
-    PDFL_CARD_4=1<<4,
-    PDFL_CARD_5=1<<5,
-    PDFL_CARD_6=1<<6,
-    PDFL_CARD_7=1<<7,
-    PDFL_CARD_8=1<<8,
-    PDFL_CARD_9=1<<9,
-    PDFL_CARD_10=1<<10,
-    PDFL_CARD_J=1<<11,
-    PDFL_CARD_Q=1<<12,
-    PDFL_CARD_K=1<<13,
+    PDFL_CARD_3=1<<1,
+    PDFL_CARD_4=1<<2,
+    PDFL_CARD_5=1<<3,
+    PDFL_CARD_6=1<<4,
+    PDFL_CARD_7=1<<5,
+    PDFL_CARD_8=1<<6,
+    PDFL_CARD_9=1<<7,
+    PDFL_CARD_10=1<<8,
+    PDFL_CARD_J=1<<9,
+    PDFL_CARD_Q=1<<10,
+    PDFL_CARD_K=1<<11,
+    PDFL_CARD_A=1<<12,
+    PDFL_CARD_2=1<<13,
     PDFL_CARD_N=1<<14,
     PDFL_CARD_M=1<<15,
 };
