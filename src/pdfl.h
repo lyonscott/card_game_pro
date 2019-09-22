@@ -4,9 +4,9 @@
 #include "base.h"
 
 /* Poker Draws Form Language(pdfl)
-chunk::=(<mark>{body})|chunk
-mark::='+'|'-'|'#'
-body::=<types><DIGIT>[limit][expand]
+chunk::=<mark>{body}|chunk
+mark::='#'
+body::='{'<types><DIGIT>[limit][expand]'}'
 types::=s|p|t|tc|tp|s|sp|st|stc|stp|b|r|q
 expand::='('types {','types}')'
 limit::='['(list|range) {','(list|range)}']'
@@ -15,12 +15,11 @@ range::=HEXDIG':'HEXDIG
 
 [eg]
 #using
-+b2[ABCD] 
- t2[4:9]
- p1[12,6:A](b,t)
+>b2[ABCD] 
+ t2[~49]
+ p1[12,~6A](b,t)
  c2[AF](p)
 
--b2[ABCD]t2[4:9]p1[12]c2[AF] #unusing
 */
 enum PDFL_TYPES{
     PDFL_TYPE_C=1<<1, //Single card

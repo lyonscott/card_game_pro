@@ -2,77 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct str_chunk{
-    const char *ptr;
-    int len;
-}StrChunk;
 
-StrChunk* chunk_match(const char *str,int len,const char start,const char end){
-    StrChunk *chunk=(StrChunk*)malloc(sizeof(StrChunk));
-    if(chunk==NULL)return NULL;
-    chunk->ptr=str;
-    while(len){
-        char c=*(chunk->ptr);
-        if(c==start)break;
-        ++(chunk->ptr);
-        --len;
-    }
-    if(chunk->ptr==NULL)goto ERR;
-    chunk->len=0;
-    while(len){
-        char c=*(chunk->ptr+chunk->len);
-        ++(chunk->len);
-        --len;
-        if(c==end)break;
-    }
-    goto OK;
-    ERR:{
-        free(chunk);
-        return NULL;
-    }
-    OK:{
-        return chunk;
-    }
-}
-void parse_number(){
-
-}
-void parse_list(){
-
-}
-void parse_range(){
-
-}
-void parse_limit(){
-
-}
 void parse_type(const char *str,int len){
-    int idx=0;
-    while(idx<len){
-        char ch=*(str+idx);
-        if(ch<'a'||ch>'z')break;
-        idx++;
-    }
-    char buf[4];memset(buf,'\0',sizeof(char)*4);
-    strncpy(buf,str,idx);
-    printf("%s\n",buf);
+
 }
 void parse_expand(const char *str,int len){
-    int idx=0;
-    while(idx<len){
-        char c=*(str+idx);
-        if(c=='('){
-            break;
-        }
-        idx++;
-    }
-    while(idx<len){
-        char c=*(str+idx);
-        if(c==')'){
-            break;
-        }
-        idx++;
-    }
+
 }
 
 void parse_body(const char *str,int start,int end){
@@ -81,60 +16,99 @@ void parse_body(const char *str,int start,int end){
 void parse_chunk(const char *str,int start,int end){
 
 }
-//TODO parser_fsm
-enum token{
-    TOKEN_BUFF=0,
-    TOKEN_NEFF=1,
-    TOKEN_NOTE=2,
-    TOKEN_TYPE=3,
-    TOKEN_DIGIT=4,
-    TOKEN_HEXDIG=5,
-    TOKEN_LIMIT=6,
-    TOKEN_EXPAND=7,
+
+struct context{
+    char *fp;
+    char *cp;
+    char *ep;
 };
-typedef enum token TOKEN;
 
-struct lexer{
-    TOKEN token;
-    const char *s_ptr;
-};
-typedef struct lexer LEXER;
-
-#define CH_BUFF(ch) (ch==0x2B)
-#define CH_NEFF(ch) (ch==0x2D)
-#define CH_NOTE(ch) (ch==0x23)
-#define CH_DIGIT(ch) (ch>=0x30&&ch<=0x39)
-#define CH_HEXDIG(ch) (CH_DIGIT(ch)||(ch>=0x41&&ch<=0x46))
-#define CH_LIMIT(ch) (ch==0x5B)
-#define CH_EXPAND(ch) (ch==0x28)
-
-void get_token(char ch){
-    
+static inline int 
+context_ended(const struct context *ctx){
+    return(ctx->cp>=ctx->ep);
+}
+static inline struct context 
+context_create(const char *stream){
+    struct context ctx;
+    ctx.fp=stream;
+    ctx.cp=ctx.fp;
+    ctx.ep=ctx.fp+strlen(stream);
+    return ctx;
 }
 
-void parser(const char *str){
-    int len=strlen(str);
-    
-}
+#define CH_DRAW(ch) ((ch)=='+')
+#define CH_NOTE(ch) ((ch)=='#')
+#define CH_MARK(ch) (CH_DRAW(ch)||CH_NOTE(ch))
+#define CH_CHAR(ch) ((ch)>='a'&&(ch)<='z')
+#define CH_DIGIT(ch) ((ch)>='0'&&(ch)<='9')
+#define CH_HEXDIG(ch) (CH_DIGIT(ch)||((ch)>='A'&&(ch)<='F'))
+#define CH_RULE(ch) ((ch)=='(')
+#define CH_RULE_END(ch) ((ch)==')')
+#define CH_ENDLINE(ch) ((ch)=='\n')
+#define CH_SPLIT(ch) ((ch)==',')
+#define CH_RANGE(ch) ((ch)=='~')
 
-void parser_fsm(const char *str,int len){
-    int idx=0;
-    while(idx<len){
-        char c=*(str+idx);
-        
-        idx++;
+void digit(struct context *ctx){
+    if(CH_DIGIT(*ctx->cp)){
+        printf("digit:%c\n",*ctx->cp);
+        ++ctx->cp;
+    }
+}
+void hexdig(struct context *ctx){
+    if(CH_HEXDIG(*ctx->cp)){
+        printf("hexdig:%c\n",*ctx->cp);
+        ++ctx->cp;
+    }
+}
+void range(struct context *ctx){
+    if(CH_RANGE(*ctx->cp)){
+        printf("start range\n");
+        ++ctx->cp;
+        while(CH_HEXDIG(*ctx->cp)){
+            hexdig(ctx);
+        }
+        printf("end range\n");
+    }
+}
+void type(struct context *ctx){
+    if(CH_CHAR(*ctx->cp)){
+        printf("type:");
+        while(CH_CHAR(*ctx->cp)){
+            printf("%c",*ctx->cp);
+            ++ctx->cp;
+        }
+        printf("\n");
     }
 }
 
-void pdfl_parser(const char *str,int len){
-    int idx=0;
-    StrChunk *chunk=chunk_match(str,len,'+','#');
-    parse_type(chunk->ptr,chunk->len);
-    for(int i=0;i<chunk->len;++i){
-        char c=*(chunk->ptr+i);
-        printf("%c",c);
+void rule(struct context *ctx){
+    if(CH_RULE(*ctx->cp)){
+        printf("start rule\n");
+        ++ctx->cp;
+        while(!CH_RULE_END(*ctx->cp)){
+            hexdig(ctx);
+            range(ctx);
+            type(ctx);
+            if(CH_SPLIT(*ctx->cp)){
+                ++ctx->cp;
+            }
+        }
+        printf("end rule\n");
+        ++ctx->cp;
     }
-    printf("\n");
+}
+
+void body(struct context *ctx){
+    type(ctx);
+    digit(ctx);
+    rule(ctx);
+}
+
+void chunk(struct context *ctx){
+    while(!context_ended(ctx)){
+        body(ctx);
+        ++ctx->cp;
+    }
 }
 
 //filter

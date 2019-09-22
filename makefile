@@ -21,7 +21,8 @@ $(TEST): $(foreach v, $(TEST_SRC),$(v))
 
 all: $(EXE)
 
-ts: $(TEST)
+ts: $(clean) $(TEST)
 
+.PHONY: clean
 clean:
 	@rm -f $(EXE) $(TEST)

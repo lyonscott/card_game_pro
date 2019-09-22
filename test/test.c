@@ -6,38 +6,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-void test_parse_type(){
-    char *str="b3[123]t3[456]p2[789](t)c2[ABC](t,p)";
-	StrChunk *chunk=chunk_match(str,strlen(str),'[',']');
-	for(int i=0;i<chunk->len;++i){
-        char c=*(chunk->ptr+i);
-        printf("%c",c);
-    }
-    printf("\n");
-	parse_type("tap4",5);
+#define TEST_OK(msg,info) printf("\033[32m[OK]\033[0m %s %s\n",#msg,#info);
+#define TEST_ERR(msg,info) printf("\033[31m[ERR]\033[0m %s %s\n",#msg,#info);
 
-}
-
-#define TEST_GET_TOKEN(test,ch) \
-if(test(ch)){\
-    printf("%s test '%c' : ok!\n",#test,ch);\
-}else{\
-    printf("%s test '%c' : err!\n",#test,ch);\
-}
+#define TEST_TOKEN_CH(test,ch) if(test(ch)){TEST_OK(test,ch)}else{TEST_ERR(test,ch)}
 void test_lexer_get_token(){
-    TEST_GET_TOKEN(CH_BUFF,'+');
-    TEST_GET_TOKEN(CH_NEFF,'-');
-    TEST_GET_TOKEN(CH_NOTE,'#');
-    TEST_GET_TOKEN(CH_DIGIT,'1');
-    TEST_GET_TOKEN(CH_DIGIT,'9');
-    TEST_GET_TOKEN(CH_HEXDIG,'1');
-    TEST_GET_TOKEN(CH_HEXDIG,'A');
-    TEST_GET_TOKEN(CH_LIMIT,'[');
-    TEST_GET_TOKEN(CH_EXPAND,'(');
+    printf("\n");
+    TEST_TOKEN_CH(CH_DRAW,'+');
+    TEST_TOKEN_CH(CH_NOTE,'#');
+    TEST_TOKEN_CH(CH_DIGIT,'0');
+    TEST_TOKEN_CH(CH_DIGIT,'9');
+    TEST_TOKEN_CH(CH_HEXDIG,'0');
+    TEST_TOKEN_CH(CH_HEXDIG,'A');
+    TEST_TOKEN_CH(CH_RULE,'(');
+}
+
+void test_chunk(){
+    //+b2(12,~35)t3(~16,b)
+    struct context ctx=context_create("+b2(12,~35)t3(b,1,~12,sp)\n+t2(123)");
+    printf("%s\n",ctx.fp);
+    chunk(&ctx);
 }
 
 int main(int argc,char **argv){
-	test_parse_type();
+    test_chunk();
     test_lexer_get_token();
 	return(1);
 }
